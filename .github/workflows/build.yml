@@ -16,16 +16,25 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true
+
+      - name: Create Flutter Project & Copy Files
+        run: |
+          flutter create temp_app
+          cp pubspec.yaml temp_app/
+          cp lib/main.dart temp_app/lib/
 
       - name: Install Dependencies
-        run: flutter pub get
+        run: |
+          cd temp_app
+          flutter pub get
 
       - name: Build APK
-        run: flutter build apk --release
+        run: |
+          cd temp_app
+          flutter build apk --release
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: mcu-app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: temp_app/build/app/outputs/flutter-apk/app-release.apk
