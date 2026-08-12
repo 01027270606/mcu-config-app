@@ -17,11 +17,17 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Create Flutter Project & Copy Files
+      - name: Create Flutter Project & Add Permissions
         run: |
           flutter create temp_app
-          cp pubspec.yaml temp_app/
-          cp lib/main.dart temp_app/lib/
+          cd temp_app
+          flutter pub add android_intent_plus
+          
+          # AndroidManifest.xml에 인터넷 권한 추가
+          sed -i '/<manifest/a \    <uses-permission android:name="android.permission.INTERNET"/>\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>' android/app/src/main/AndroidManifest.xml
+          
+          cp ../pubspec.yaml .
+          cp ../lib/main.dart lib/
 
       - name: Install Dependencies
         run: |
